@@ -8,4 +8,4 @@ def run(uscf_id):
     makegraphics(circles, bars)
     return
 
-run(12872878)
+run()
