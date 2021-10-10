@@ -1,10 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import math
-import pandas as pd
-from bs4 import BeautifulSoup
-import requests
-
 from ratingscraper import all_gamestats
 from plotprepare import plotdata
 from graphmaker import makegraphics
@@ -15,4 +8,4 @@ def run(uscf_id):
     makegraphics(circles, bars)
     return
 
-run(12911474)
+run(12872878)

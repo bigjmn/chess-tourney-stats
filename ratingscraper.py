@@ -1,34 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 
-def get_id(name):
-    splitname = name.split(' ')
-    firstname = splitname[0]
-    lastname = splitname[1]
-    #this is gross, but what can you do?
-    search_url = "https://new.uschess.org/player-search?submit=1&pager=1&display_name="+firstname+"%2520"+lastname+"&rating_94%5Bmin%5D=&rating_94%5Bmax%5D=&quick_rating_95%5Bmin%5D=&quick_rating_95%5Bmax%5D=&blitz_rating_96%5Bmin%5D=&blitz_rating_96%5Bmax%5D=&online_regular_rating_165%5Bmin%5D=&online_regular_rating_165%5Bmax%5D=&online_blitz_rating_98%5Bmin%5D=&online_blitz_rating_98%5Bmax%5D=&online_quick_rating_97%5Bmin%5D=&online_quick_rating_97%5Bmax%5D=&correspondence_rating_101%5Bmin%5D=&correspondence_rating_101%5Bmax%5D="
-    search_info = requests.get(search_url).text
-    search_parser = BeautifulSoup(search_info, 'lxml')
-
-    body = search_parser.find('tbody')
-    print(body).text
-
-
-def rating_from_crosstable(player_id, cross_url):
-    cross_info = requests.get(cross_url).text
-    soup = BeautifulSoup(cross_info, 'lxml')
-    #this could probs be sped up. we'll see how bad the total runtime is
-    ratingindex = str(soup).find(str(player_id)+ ' / R: ')
-    if ratingindex == -1:
-        print('not found')
-        return
-    #strips space from 3 digit rating, P from provisional
-    rating = str(soup)[ratingindex+13:ratingindex+18].strip()
-    if rating == 'Unra':
-        return 0
-    return int(rating)
-
-
 def ratinghist(player_id):
     tourney_ratings = {}
 
@@ -78,14 +50,6 @@ def histpage(player_id, pagenum):
 
         pageratings[tourney_id] = rating
     return pageratings
-
-
-
-
-
-
-
-
 
 
 def rating_table(uscf_id, opp_rating_zone,tourney_dict):
@@ -148,25 +112,3 @@ def all_gamestats(uscf_id):
         opp_rating_dict[zone] = new_stats
 
     return opp_rating_dict
-
-
-
-
-
-
-
-
-
-
-    #the first table with a header is the one we're looking for
-    # table_header = soup.find('th')
-
-    # full_table = table_header.parent.parent
-    # rows = full_table.findChildren('tr')
-    # for row in rows:
-    #     cells = row.findChildren('nobr')
-    #     for cell in cells:
-    #         print(str(cell.contents))
-
-
-#opp_rating_table(12872878,1700)
