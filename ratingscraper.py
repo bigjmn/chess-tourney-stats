@@ -39,11 +39,11 @@ def ratinghist(player_id):
     soup = BeautifulSoup(hist, 'lxml')
     #number of history pages
     pages = len(soup.find_all('nobr'))
-    print(pages)
+
     for i in range(pages):
         page_ratings = histpage(player_id, i+1)
         tourney_ratings.update(page_ratings)
-    print(len(tourney_ratings))
+
 
     return tourney_ratings
 
@@ -74,7 +74,7 @@ def histpage(player_id, pagenum):
             continue
         rating = str(cells[2].text).split(' ')[0]
         tourney_id = str(cells[0].small.text).strip()
-        print('hist table is '+tourney_id)
+
 
         pageratings[tourney_id] = rating
     return pageratings
@@ -89,6 +89,7 @@ def histpage(player_id, pagenum):
 
 
 def rating_table(uscf_id, opp_rating_zone,tourney_dict):
+
     gamelogs = []
     #technically shouldn't remake this dictionary here, but come on
     result_dict = {
@@ -98,23 +99,23 @@ def rating_table(uscf_id, opp_rating_zone,tourney_dict):
     }
     search_url = "https://www.uschess.org/datapage/gamestats.php?memid="+str(uscf_id)+"&ptype=G&rs=R&dkey="+str(opp_rating_zone)+"&drill=G"
     search_info = requests.get(search_url).text
-    print(requests.get(search_url))
+
     soup = BeautifulSoup(search_info,'lxml')
 
     #we can skip a bunch of children, the ratings have this tag
     ratingcells = soup.find_all('nobr')
-    print(len(ratingcells))
+
 
 
     for r in ratingcells:
-        print(str(r.contents))
+
         #there are a few headers w the nobr tag, filter them out
 
         if '(R)' in str(r.contents):
             game_info = {}
             rating_string = str(r.contents)
             opp_rating = rating_string.split(' ')[0]
-            game_info['opp_rating'] = opp_rating
+            game_info['opp_rating'] = opp_rating[2:]
             #the nobr is a child of a cell in the row. get the next cell
             result_cell = r.parent.next_sibling
             game_result = str(result_cell.text)
@@ -124,7 +125,7 @@ def rating_table(uscf_id, opp_rating_zone,tourney_dict):
             tourney_url = row.find('a')['href']
             #get tournament id from end ur url
             tourney_id = tourney_url.split('?')[-1]
-            print('tourney length is '+str(len(tourney_id)))
+
 
 
             if tourney_id not in tourney_dict:
@@ -135,13 +136,15 @@ def rating_table(uscf_id, opp_rating_zone,tourney_dict):
     return gamelogs
 
 def all_gamestats(uscf_id):
+    print('getting tournament history')
     tourney_ratings = ratinghist(uscf_id)
 
     opp_rating_dict = {}
+    print('getting opponents ratings')
     for i in range(1,28):
         zone = i*100
         new_stats = rating_table(uscf_id, zone, tourney_ratings)
-        print(len(new_stats))
+
         opp_rating_dict[zone] = new_stats
 
     return opp_rating_dict
