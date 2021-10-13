@@ -40,14 +40,14 @@ def plotdata(stats):
             circlist.append(circstats)
             diffstats = []
             rating_diff = opp_rating - your_rating
-            #okay this part is gross, but I
+            
             adj_diff = round(rating_diff/50)
             if abs(adj_diff)>12:
                 continue
 
             difflist[adj_diff+12][r(result)]+=1
     df = pd.DataFrame(difflist)
-    df.columns = ['lose', 'draw', 'win']
+    df.columns = ['loss', 'draw', 'win']
     df.insert(0,'rating difference', rowlist)
 
 

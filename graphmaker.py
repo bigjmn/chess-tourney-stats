@@ -15,7 +15,7 @@ def plotcircles(data):
 def barstack(bardata):
     bardata.plot(x='rating difference', kind='bar', stacked=True,
     title='Results by Rating Difference')
-    plt.savefig('graphics/barplot.png')
+    plt.savefig('graphics/barplot.png', bbox_inches='tight')
 
 
 def makegraphics(circledata, bardata):
